@@ -1,8 +1,7 @@
 export function App() {
   return (
     <>
-      <h1 className='text-2xl mt-5 text-center'>Фото к пропускам</h1>
+      <h1 className="mt-5 text-center text-2xl">Фото к пропускам</h1>
     </>
-  )
+  );
 }
-
