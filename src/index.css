@@ -1,1 +1,19 @@
 @import "tailwindcss";
+
+
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+}
+    
+.slider::-moz-range-thumb {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+}
