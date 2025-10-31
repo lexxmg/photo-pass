@@ -23,7 +23,7 @@ export const ImageCropper = () => {
         if (typeof reader.result === 'string') {
           setImageSrc(reader.result);
           setCrop({ x: 0, y: 0 });
-          setZoom(1);
+          setZoom(1.01);
           setCroppedImage(null);
         }
       });
@@ -77,9 +77,9 @@ export const ImageCropper = () => {
   }, []);
 
   return (
-    <div className="m-auto min-h-screen min-w-lg bg-gray-50 px-4 py-8 max-md:min-w-full">
+    <div className="m-auto min-w-lg bg-gray-50 px-4 py-8 max-md:min-w-full">
       <div className="mx-auto max-w-2xl rounded-lg bg-white p-6 shadow-md">
-        <h1 className="mb-6 text-center text-2xl font-bold text-gray-800">Редактор фотографий</h1>
+        {!croppedImage && <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">Редактор фотографий</h2>}
 
         <input type="file" accept="image/*" onChange={onFileChange} ref={fileInputRef} className="hidden" />
 
@@ -100,9 +100,9 @@ export const ImageCropper = () => {
         {imageSrc && !croppedImage && (
           <div className="space-y-6">
             <div className="rounded-lg bg-gray-100 p-4">
-              <h2 className="mb-3 text-lg font-semibold text-gray-800">Обрежьте изображение</h2>
+              <h3 className="mb-3 text-lg font-semibold text-gray-800">Обрежьте изображение</h3>
 
-              <div className="relative overflow-hidden rounded-lg bg-gray-200" style={{ height: '400px' }}>
+              <div className="relative h-100 overflow-hidden rounded-lg bg-gray-200 max-[25rem]:h-62.5">
                 <Cropper
                   image={imageSrc}
                   crop={crop}
@@ -130,16 +130,16 @@ export const ImageCropper = () => {
               </div>
             </div>
 
-            <div className="flex space-x-3">
+            <div className="flex gap-5 max-sm:flex-wrap">
               <button
                 onClick={showCroppedImage}
-                className="flex-1 rounded-lg bg-green-600 py-3 font-medium text-white transition duration-200 hover:bg-green-700"
+                className="grow rounded-lg bg-green-600 px-8 py-3 font-medium text-white transition duration-200 hover:bg-green-700 max-sm:w-full"
               >
                 Применить обрезку
               </button>
               <button
                 onClick={handleNewImage}
-                className="flex-1 rounded-lg bg-gray-500 py-3 font-medium text-white transition duration-200 hover:bg-gray-600"
+                className="grow rounded-lg bg-gray-500 px-8 py-3 font-medium text-white transition duration-200 hover:bg-gray-600 max-sm:w-full"
               >
                 Новое фото
               </button>
@@ -149,18 +149,10 @@ export const ImageCropper = () => {
 
         {croppedImage && (
           <div className="space-y-6">
-            <h2 className="text-center text-xl font-semibold text-gray-800">Результат обрезки</h2>
+            <h3 className="text-center text-xl font-semibold text-gray-800">Результат обрезки</h3>
 
             <div className="flex flex-col items-center space-y-4">
-              <img
-                src={croppedImage}
-                alt="Обрезанное изображение"
-                style={{
-                  width: `${TARGET_WIDTH}px`,
-                  height: `${TARGET_HEIGHT}px`,
-                }}
-                className="rounded-lg border-2 border-gray-300 object-contain"
-              />
+              <img src={croppedImage} alt="Обрезанное изображение" className="rounded-lg border-2 border-gray-300 object-contain" />
 
               <div className="text-center">
                 <div className="text-lg font-medium text-gray-700">
@@ -168,16 +160,16 @@ export const ImageCropper = () => {
                 </div>
               </div>
 
-              <div className="flex gap-5 max-sm:flex-wrap">
+              <div className="flex flex-wrap gap-5">
                 <button
                   onClick={downloadImage}
-                  className="rounded-lg bg-blue-600 px-8 py-3 font-medium text-white transition duration-200 hover:bg-blue-700 max-sm:w-full"
+                  className="grow rounded-lg bg-blue-600 px-8 py-3 font-medium text-white transition duration-200 hover:bg-blue-700 max-sm:w-full"
                 >
                   Скачать фото
                 </button>
                 <button
                   onClick={backToEdit}
-                  className="rounded-lg bg-gray-500 px-8 py-3 font-medium text-white transition duration-200 hover:bg-gray-600 max-sm:w-full"
+                  className="max-2m:w-full grow rounded-lg bg-gray-500 px-8 py-3 font-medium text-white transition duration-200 hover:bg-gray-600"
                 >
                   Вернуться к редактированию
                 </button>
