@@ -3,10 +3,14 @@ import Cropper from 'react-easy-crop';
 import { type Point, type Area } from 'react-easy-crop';
 import { getCroppedImg } from '../utils/cropUtils';
 
+type Props = {
+  isReset: boolean;
+};
+
 const TARGET_WIDTH = 478;
 const TARGET_HEIGHT = 638;
 
-export const ImageCropper = () => {
+export const ImageCropper = ({ isReset }: Props) => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState<number>(1);
@@ -71,6 +75,15 @@ export const ImageCropper = () => {
     setZoom(1);
     fileInputRef.current?.click();
   }, []);
+
+  const imageReset = () => {
+    setImageSrc(null);
+    setCroppedImage(null);
+    setCrop({ x: 0, y: 0 });
+    setZoom(1);
+  };
+
+  if (isReset && imageSrc) imageReset();
 
   const backToEdit = useCallback(() => {
     setCroppedImage(null);
@@ -142,6 +155,12 @@ export const ImageCropper = () => {
                 className="grow rounded-lg bg-gray-500 px-8 py-3 font-medium text-white transition duration-200 hover:bg-gray-600 max-sm:w-full"
               >
                 Новое фото
+              </button>
+              <button
+                onClick={imageReset}
+                className="grow rounded-lg bg-gray-500 px-8 py-3 font-medium text-white transition duration-200 hover:bg-gray-600 max-sm:w-full"
+              >
+                Сброс
               </button>
             </div>
           </div>

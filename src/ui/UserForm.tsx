@@ -1,6 +1,12 @@
 import { useState, useCallback, type ChangeEvent, type FormEvent } from 'react';
 
-export const UserForm = () => {
+type Props = {
+  formSubmit: () => void;
+};
+
+export const UserForm = ({ formSubmit }: Props) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const croppedImage = null;
   const [formData, setFormData] = useState({
     companyName: '',
     firstName: '',
@@ -91,13 +97,47 @@ export const UserForm = () => {
   );
 
   const handleSubmit = useCallback(
-    (e: FormEvent) => {
+    async (e: FormEvent) => {
       e.preventDefault();
 
-      if (validateForm()) {
-        // Отправка данных
-        console.log('Данные формы:', formData);
-        alert('Форма успешно отправлена!');
+      if (!validateForm()) {
+        return;
+      }
+
+      setIsLoading(true);
+      try {
+        // Создаем FormData для отправки
+        const formDataToSend = new FormData();
+
+        // Добавляем данные формы
+        formDataToSend.append('companyName', formData.companyName);
+        formDataToSend.append('firstName', formData.firstName);
+        formDataToSend.append('middleName', formData.middleName);
+        formDataToSend.append('lastName', formData.lastName);
+        formDataToSend.append('cardNumber', formData.cardNumber);
+
+        // Добавляем отредактированное фото
+        if (croppedImage) {
+          // Конвертируем Data URL в Blob
+          const response = await fetch(croppedImage);
+          const blob = await response.blob();
+          formDataToSend.append('photo', blob, 'cropped-photo.jpg');
+        }
+
+        // Здесь отправляем данные на сервер
+        console.log('Данные для отправки:', {
+          companyName: formData.companyName,
+          firstName: formData.firstName,
+          middleName: formData.middleName,
+          lastName: formData.lastName,
+          cardNumber: formData.cardNumber,
+          hasPhoto: !!croppedImage,
+        });
+
+        // Имитация отправки на сервер
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
+        alert('Данные успешно отправлены!');
 
         // Сброс формы
         setFormData({
@@ -107,9 +147,15 @@ export const UserForm = () => {
           lastName: '',
           cardNumber: '',
         });
+        formSubmit();
+      } catch (error) {
+        console.error('Ошибка при отправке:', error);
+        alert('Произошла ошибка при отправке данных');
+      } finally {
+        setIsLoading(false);
       }
     },
-    [formData],
+    [formData, croppedImage],
   );
 
   const handleReset = useCallback(() => {
@@ -237,7 +283,7 @@ export const UserForm = () => {
               type="submit"
               className="flex-1 rounded-lg bg-blue-600 px-6 py-3 text-sm font-medium text-white transition duration-200 hover:bg-blue-700 sm:text-base"
             >
-              Отправить данные
+              Отправить данные {isLoading ? 'Отправка...' : 'Отправить'}
             </button>
             <button
               type="button"
