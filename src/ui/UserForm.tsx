@@ -2,11 +2,11 @@ import { useState, useCallback, type ChangeEvent, type FormEvent } from 'react';
 
 type Props = {
   formSubmit: () => void;
+  croppedImage: Blob | null;
 };
 
-export const UserForm = ({ formSubmit }: Props) => {
+export const UserForm = ({ formSubmit, croppedImage }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const croppedImage = null;
   const [formData, setFormData] = useState({
     companyName: '',
     firstName: '',
@@ -119,9 +119,16 @@ export const UserForm = ({ formSubmit }: Props) => {
         // Добавляем отредактированное фото
         if (croppedImage) {
           // Конвертируем Data URL в Blob
-          const response = await fetch(croppedImage);
-          const blob = await response.blob();
-          formDataToSend.append('photo', blob, 'cropped-photo.jpg');
+          // const response = await fetch(croppedImage);
+          // const blob = await response.blob();
+          formDataToSend.append('photo', croppedImage, 'cropped-photo.jpg');
+
+          // ✅ ВРЕМЕННО: Создаем URL для просмотра фото
+          const tempUrl = URL.createObjectURL(croppedImage);
+          console.log('📸 Фото для отправки:', tempUrl);
+
+          // Открываем фото в новой вкладке
+          window.open(tempUrl, '_blank');
         }
 
         // Здесь отправляем данные на сервер

@@ -9,7 +9,12 @@ const createImage = (url: string): Promise<HTMLImageElement> =>
     image.src = url;
   });
 
-export const getCroppedImg = async (imageSrc: string, pixelCrop: Area, targetWidth = 478, targetHeight = 638): Promise<string> => {
+type ImageResult = {
+  url: string;
+  blob: Blob | null;
+};
+
+export const getCroppedImg = async (imageSrc: string, pixelCrop: Area, targetWidth = 478, targetHeight = 638): Promise<ImageResult> => {
   const image = await createImage(imageSrc);
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
@@ -33,7 +38,7 @@ export const getCroppedImg = async (imageSrc: string, pixelCrop: Area, targetWid
         }
 
         const url = URL.createObjectURL(blob);
-        resolve(url);
+        resolve({ url, blob });
       },
       'image/jpeg',
       0.2,
