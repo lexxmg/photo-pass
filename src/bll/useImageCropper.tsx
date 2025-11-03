@@ -20,6 +20,8 @@ export type ImageCropperControl = {
   backToEdit: () => void;
   setCrop: ({}: Point) => void;
   setZoom: (zoom: number) => void;
+  setIsLoading: (value: boolean) => void;
+  isLoading: boolean;
 };
 
 export function useImageCropper(targetWidth: number, targetHeight: number): ImageCropperControl {
@@ -31,9 +33,11 @@ export function useImageCropper(targetWidth: number, targetHeight: number): Imag
   const [croppedImageBlob, setCroppedImageBlob] = useState<Blob | null>(null);
   const [fileInputKey, setFileInputKey] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const onFileChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
+      setIsLoading(true);
       const file = e.target.files[0];
       const reader = new FileReader();
 
@@ -43,6 +47,7 @@ export function useImageCropper(targetWidth: number, targetHeight: number): Imag
           setCrop({ x: 0, y: 0 });
           setZoom(1.01);
           setCroppedImage(null);
+          setIsLoading(false);
         }
       });
 
@@ -112,6 +117,8 @@ export function useImageCropper(targetWidth: number, targetHeight: number): Imag
     croppedImageBlob,
     fileInputKey,
     fileInputRef,
+    isLoading,
+    setIsLoading,
     onFileChange,
     onCropComplete,
     showCroppedImage,

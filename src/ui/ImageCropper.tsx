@@ -11,6 +11,14 @@ type Props = {
 export const ImageCropper = (props: Props) => {
   const imageCropperControl = props.imageCropperControl;
 
+  const handelClickgetImage = () => {
+    imageCropperControl.setIsLoading(true);
+    setTimeout(() => {
+      imageCropperControl.setIsLoading(false);
+      imageCropperControl.fileInputRef.current?.click();
+    }, 20);
+  };
+
   return (
     <div className="min-w-lg bg-gray-50 px-4 py-8 max-lg:m-auto max-md:min-w-full">
       <div className="mx-auto max-w-2xl rounded-lg bg-white p-6 shadow-md">
@@ -28,11 +36,29 @@ export const ImageCropper = (props: Props) => {
         {!imageCropperControl.imageSrc && (
           <div className="py-12 text-center">
             <button
-              onClick={() => imageCropperControl.fileInputRef.current?.click()}
-              className="rounded-lg bg-blue-600 px-8 py-3 text-lg font-medium text-white transition duration-200 hover:bg-blue-700"
+              type="button"
+              onClick={handelClickgetImage}
+              disabled={imageCropperControl.isLoading}
+              className="cursor-pointer rounded-lg bg-blue-600 px-8 py-3 text-lg font-medium text-white transition duration-200 hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-400 disabled:hover:bg-blue-400"
             >
-              Выберите фотографию
+              {imageCropperControl.isLoading ? (
+                <span className="flex items-center justify-center">
+                  {/* Индикатор загрузки */}
+                  <svg className="mr-3 -ml-1 h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Подождите...
+                </span>
+              ) : (
+                '📷 Выберите фотографию'
+              )}
             </button>
+
             <p className="mt-4 text-gray-600">
               Размер после обрезки: {TARGET_WIDTH}×{TARGET_HEIGHT}px
             </p>
