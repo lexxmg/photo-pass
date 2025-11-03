@@ -15,7 +15,7 @@ export function App() {
 
   return (
     <div className="m-auto max-w-6xl max-lg:px-2">
-      <div className="flex min-h-screen gap-2.5 max-md:flex-wrap">
+      <div className="flex min-h-screen max-md:flex-wrap">
         <ImageCropper imageCropperControl={imageCropperControl} />
 
         <div className="w-full">
