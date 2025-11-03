@@ -182,7 +182,7 @@ export const UserForm = ({ formSubmit, croppedImage }: Props) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 px-2 py-4 sm:px-4 sm:py-8">
+    <div className="min-h-screen min-w-lg bg-gray-50 px-2 py-4 sm:px-4 sm:py-8">
       <div className="mx-auto max-w-2xl rounded-lg bg-white p-3 shadow-sm sm:p-6 sm:shadow-md">
         <h1 className="mb-4 text-center text-xl font-bold text-gray-800 sm:mb-6 sm:text-2xl">Регистрационная форма</h1>
 

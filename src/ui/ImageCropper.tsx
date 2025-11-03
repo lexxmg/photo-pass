@@ -8,13 +8,22 @@ type Props = {
   imageCropperControl: ImageCropperControl;
 };
 
-export const ImageCropper = ({ imageCropperControl }: Props) => {
+export const ImageCropper = (props: Props) => {
+  const imageCropperControl = props.imageCropperControl;
+
   return (
     <div className="min-w-lg bg-gray-50 px-4 py-8 max-md:min-w-full">
       <div className="mx-auto max-w-2xl rounded-lg bg-white p-6 shadow-md">
         {!imageCropperControl.croppedImage && <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">Редактор фотографий</h2>}
 
-        <input type="file" accept="image/*" onChange={imageCropperControl.onFileChange} ref={imageCropperControl.fileInputRef} className="hidden" />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={imageCropperControl.onFileChange}
+          key={imageCropperControl.fileInputKey}
+          ref={imageCropperControl.fileInputRef}
+          className="hidden"
+        />
 
         {!imageCropperControl.imageSrc && (
           <div className="py-12 text-center">

@@ -9,6 +9,7 @@ export type ImageCropperControl = {
   croppedAreaPixels: Area | null;
   croppedImage: string | null;
   croppedImageBlob: Blob | null;
+  fileInputKey: number;
   fileInputRef: RefObject<HTMLInputElement | null>;
   onFileChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onCropComplete: (_croppedArea: Area, croppedAreaPixels: Area) => void;
@@ -28,6 +29,7 @@ export function useImageCropper(targetWidth: number, targetHeight: number): Imag
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
   const [croppedImageBlob, setCroppedImageBlob] = useState<Blob | null>(null);
+  const [fileInputKey, setFileInputKey] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const onFileChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -94,10 +96,7 @@ export function useImageCropper(targetWidth: number, targetHeight: number): Imag
     setCroppedImage(null);
     setCrop({ x: 0, y: 0 });
     setZoom(1);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''; // Это сбрасывает значение input[type="file"]
-      console.log(fileInputRef.current.value);
-    }
+    setFileInputKey((prev) => prev + 1); // Пересоздает input
   }, []);
 
   const backToEdit = useCallback(() => {
@@ -111,6 +110,7 @@ export function useImageCropper(targetWidth: number, targetHeight: number): Imag
     croppedAreaPixels,
     croppedImage,
     croppedImageBlob,
+    fileInputKey,
     fileInputRef,
     onFileChange,
     onCropComplete,
