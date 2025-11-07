@@ -19,6 +19,14 @@ export const ImageCropper = (props: Props) => {
     }, 20);
   };
 
+  const handelNewImage = (): void => {
+    imageCropperControl.setIsLoading(true);
+    setTimeout(() => {
+      imageCropperControl.setIsLoading(false);
+      imageCropperControl.handleNewImage();
+    }, 20);
+  };
+
   return (
     <div className="min-w-lg bg-gray-50 px-4 py-8 max-lg:m-auto max-md:min-w-full">
       <div className="mx-auto max-w-2xl rounded-lg bg-white p-6 shadow-md">
@@ -68,8 +76,6 @@ export const ImageCropper = (props: Props) => {
         {imageCropperControl.imageSrc && !imageCropperControl.croppedImage && (
           <div className="space-y-6">
             <div className="rounded-lg bg-gray-100 p-4">
-              <h3 className="mb-3 text-lg font-semibold text-gray-800">Обрежьте изображение</h3>
-
               <div className="relative h-100 overflow-hidden rounded-lg bg-gray-200 max-[25rem]:h-62.5">
                 <Cropper
                   image={imageCropperControl.imageSrc}
@@ -106,10 +112,11 @@ export const ImageCropper = (props: Props) => {
                 Применить обрезку
               </button>
               <button
-                onClick={imageCropperControl.handleNewImage}
+                onClick={handelNewImage}
+                disabled={imageCropperControl.isLoading}
                 className="grow rounded-lg bg-gray-500 px-8 py-3 font-medium text-white transition duration-200 hover:bg-gray-600 max-sm:w-full"
               >
-                Новое фото
+                {imageCropperControl.isLoading ? 'Подождите...' : 'Новое фото'}
               </button>
               <button
                 onClick={imageCropperControl.imageReset}
@@ -129,14 +136,8 @@ export const ImageCropper = (props: Props) => {
               <img
                 src={imageCropperControl.croppedImage}
                 alt="Обрезанное изображение"
-                className="rounded-lg border-2 border-gray-300 object-contain"
+                className="h-100 rounded-lg border-2 border-gray-300 object-contain"
               />
-
-              <div className="text-center">
-                <div className="text-lg font-medium text-gray-700">
-                  Размер: {TARGET_WIDTH} × {TARGET_HEIGHT} пикселей
-                </div>
-              </div>
 
               <div className="flex flex-wrap gap-5">
                 <button
