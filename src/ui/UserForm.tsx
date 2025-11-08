@@ -89,6 +89,23 @@ export const UserForm = (props: Props) => {
             />
           </div>
 
+          {/* Должность (необязательное) */}
+          <div className="space-y-2">
+            <label htmlFor="position" className="block text-sm font-medium text-gray-700">
+              Должность*
+            </label>
+            <input
+              type="text"
+              id="position"
+              name="position"
+              value={userFormControl.formData.position}
+              onChange={userFormControl.handleInputChange}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Ваша должность"
+            />
+            {userFormControl.errors.position && <p className="mt-1 text-xs text-red-500">{userFormControl.errors.position}</p>}
+          </div>
+
           {/* Номер карты */}
           <div className="space-y-2">
             <label htmlFor="cardNumber" className="block text-sm font-medium text-gray-700">

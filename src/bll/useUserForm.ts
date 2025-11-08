@@ -1,5 +1,6 @@
 import { type ChangeEvent, type FormEvent, useState, useCallback } from 'react';
 import { validateForm, type FormData, type Errors } from '../utils/formValidators';
+import { sendDataToServer } from '../dal/api';
 
 export type UserFormControls = {
   isLoading: boolean;
@@ -18,6 +19,7 @@ export const useUserForm = (formSubmit: () => void, croppedImage: Blob | null): 
     firstName: '',
     middleName: '',
     lastName: '',
+    position: '',
     cardNumber: '',
   });
 
@@ -25,6 +27,7 @@ export const useUserForm = (formSubmit: () => void, croppedImage: Blob | null): 
     companyName: '',
     firstName: '',
     lastName: '',
+    position: '',
     cardNumber: '',
   });
 
@@ -66,10 +69,15 @@ export const useUserForm = (formSubmit: () => void, croppedImage: Blob | null): 
   );
 
   const handleSubmit = useCallback(
-    async (e: FormEvent) => {
+    async (e: FormEvent): Promise<void> => {
       e.preventDefault();
 
       if (!validateForm(formData, setErrors)) {
+        return;
+      }
+
+      if (!croppedImage) {
+        console.log('Добавьте и отредактируйте фото');
         return;
       }
 
@@ -83,21 +91,22 @@ export const useUserForm = (formSubmit: () => void, croppedImage: Blob | null): 
         formDataToSend.append('firstName', formData.firstName);
         formDataToSend.append('middleName', formData.middleName);
         formDataToSend.append('lastName', formData.lastName);
+        formDataToSend.append('position', formData.position);
         formDataToSend.append('cardNumber', formData.cardNumber);
 
         // Добавляем отредактированное фото
         if (croppedImage) {
-          // Конвертируем Data URL в Blob
-          // const response = await fetch(croppedImage);
-          // const blob = await response.blob();
-          formDataToSend.append('photo', croppedImage, `${formData.companyName}_${formData.firstName}.jpg`);
+          formDataToSend.append('photo', croppedImage, 'cropped-image.jpg');
 
-          // ✅ ВРЕМЕННО: Создаем URL для просмотра фото
-          const tempUrl = URL.createObjectURL(croppedImage);
-          console.log('📸 Фото для отправки:', tempUrl);
-
-          // Открываем фото в новой вкладке
-          window.open(tempUrl, '_blank');
+          //           if (false) {
+          //             // Если нужно покозать фото в браузере
+          //             // ✅ ВРЕМЕННО: Создаем URL для просмотра фото
+          //             const tempUrl = URL.createObjectURL(croppedImage);
+          //             console.log('📸 Фото для отправки:', tempUrl);
+          //
+          //             // Открываем фото в новой вкладке
+          //             window.open(tempUrl, '_blank');
+          //           }
         }
 
         // Здесь отправляем данные на сервер
@@ -106,14 +115,13 @@ export const useUserForm = (formSubmit: () => void, croppedImage: Blob | null): 
           firstName: formData.firstName,
           middleName: formData.middleName,
           lastName: formData.lastName,
+          position: formData.position,
           cardNumber: formData.cardNumber,
           hasPhoto: !!croppedImage,
         });
 
-        // Имитация отправки на сервер
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-
-        alert('Данные успешно отправлены!');
+        const result = await sendDataToServer(formDataToSend);
+        console.log('✅ Ответ сервера:', result);
 
         // Сброс формы
         setFormData({
@@ -121,8 +129,10 @@ export const useUserForm = (formSubmit: () => void, croppedImage: Blob | null): 
           firstName: '',
           middleName: '',
           lastName: '',
+          position: '',
           cardNumber: '',
         });
+
         formSubmit();
       } catch (error) {
         console.error('Ошибка при отправке:', error);
@@ -140,12 +150,14 @@ export const useUserForm = (formSubmit: () => void, croppedImage: Blob | null): 
       firstName: '',
       middleName: '',
       lastName: '',
+      position: '',
       cardNumber: '',
     });
     setErrors({
       companyName: '',
       firstName: '',
       lastName: '',
+      position: '',
       cardNumber: '',
     });
   }, []);

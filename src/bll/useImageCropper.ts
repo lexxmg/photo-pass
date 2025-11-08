@@ -99,6 +99,7 @@ export function useImageCropper(targetWidth: number, targetHeight: number): Imag
   const imageReset = useCallback(() => {
     setImageSrc(null);
     setCroppedImage(null);
+    setCroppedImageBlob(null);
     setCrop({ x: 0, y: 0 });
     setZoom(1);
     setFileInputKey((prev) => prev + 1); // Пересоздает input
@@ -106,6 +107,7 @@ export function useImageCropper(targetWidth: number, targetHeight: number): Imag
 
   const backToEdit = useCallback(() => {
     setCroppedImage(null);
+    setCroppedImageBlob(null);
   }, []);
 
   return {

@@ -18,7 +18,7 @@ export function App() {
   return (
     <div className="m-auto max-w-6xl max-lg:px-2">
       <div className="flex min-h-screen max-lg:flex-wrap">
-        <ImageCropper imageCropperControl={imageCropperControl} />
+        <ImageCropper imageCropperControl={imageCropperControl} isAdmin={false} />
 
         <div className="w-full">
           <UserForm userFormControl={userFormControl} />

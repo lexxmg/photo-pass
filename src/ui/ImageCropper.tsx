@@ -5,6 +5,7 @@ const TARGET_WIDTH = 478;
 const TARGET_HEIGHT = 638;
 
 type Props = {
+  isAdmin: boolean;
   imageCropperControl: ImageCropperControl;
 };
 
@@ -118,12 +119,15 @@ export const ImageCropper = (props: Props) => {
               >
                 {imageCropperControl.isLoading ? 'Подождите...' : 'Новое фото'}
               </button>
-              <button
-                onClick={imageCropperControl.imageReset}
-                className="grow rounded-lg bg-gray-500 px-8 py-3 font-medium text-white transition duration-200 hover:bg-gray-600 max-sm:w-full"
-              >
-                Сброс
-              </button>
+
+              {props.isAdmin && (
+                <button
+                  onClick={imageCropperControl.imageReset}
+                  className="grow rounded-lg bg-gray-500 px-8 py-3 font-medium text-white transition duration-200 hover:bg-gray-600 max-sm:w-full"
+                >
+                  Сброс
+                </button>
+              )}
             </div>
           </div>
         )}
@@ -140,12 +144,15 @@ export const ImageCropper = (props: Props) => {
               />
 
               <div className="flex flex-wrap gap-5">
-                <button
-                  onClick={imageCropperControl.downloadImage}
-                  className="grow rounded-lg bg-blue-600 px-8 py-3 font-medium text-white transition duration-200 hover:bg-blue-700 max-sm:w-full"
-                >
-                  Скачать фото
-                </button>
+                {props.isAdmin && (
+                  <button
+                    onClick={imageCropperControl.downloadImage}
+                    className="grow rounded-lg bg-blue-600 px-8 py-3 font-medium text-white transition duration-200 hover:bg-blue-700 max-sm:w-full"
+                  >
+                    Скачать фото
+                  </button>
+                )}
+
                 <button
                   onClick={imageCropperControl.backToEdit}
                   className="max-2m:w-full grow rounded-lg bg-gray-500 px-8 py-3 font-medium text-white transition duration-200 hover:bg-gray-600"

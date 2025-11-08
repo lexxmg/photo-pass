@@ -3,6 +3,7 @@ export type FormData = {
   firstName: string;
   middleName: string;
   lastName: string;
+  position: string;
   cardNumber: string;
 };
 
@@ -10,6 +11,7 @@ export type Errors = {
   companyName: string;
   firstName: string;
   lastName: string;
+  position: string;
   cardNumber: string;
 };
 
@@ -18,7 +20,9 @@ export const validateForm = (formData: FormData, setErrors: (value: Errors) => v
     companyName: '',
     firstName: '',
     lastName: '',
+    position: '',
     cardNumber: '',
+    croppedImage: '',
   };
 
   let isValid = true;
@@ -35,6 +39,11 @@ export const validateForm = (formData: FormData, setErrors: (value: Errors) => v
 
   if (!formData.lastName.trim()) {
     newErrors.lastName = 'Фамилия обязательна';
+    isValid = false;
+  }
+
+  if (!formData.position.trim()) {
+    newErrors.position = 'Название должности обязательно';
     isValid = false;
   }
 
