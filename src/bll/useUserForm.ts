@@ -12,7 +12,9 @@ export type UserFormControls = {
   handleReset: () => void;
 };
 
-export const useUserForm = (formSubmit: () => void, croppedImage: Blob | null): UserFormControls => {
+type Api = 'newCard' | 'removCard';
+
+export const useUserForm = (formSubmit: () => void, croppedImage: Blob | null, sendServer: Api = 'newCard'): UserFormControls => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>({
     companyName: '',
@@ -120,8 +122,19 @@ export const useUserForm = (formSubmit: () => void, croppedImage: Blob | null): 
           hasPhoto: !!croppedImage,
         });
 
-        const result = await sendDataToServer(formDataToSend);
-        console.log('✅ Ответ сервера:', result);
+        switch (sendServer) {
+          case 'newCard':
+            const result = await sendDataToServer(formDataToSend);
+            console.log('✅ Ответ сервера:', result);
+            break;
+          case 'removCard':
+            console.log('удаление карты');
+
+            break;
+          default:
+            console.log('Передан неизвестный параметр');
+            break;
+        }
 
         // Сброс формы
         setFormData({

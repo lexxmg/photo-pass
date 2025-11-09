@@ -133,8 +133,9 @@ export const UserForm = (props: Props) => {
               type="submit"
               className="flex-1 rounded-lg bg-blue-600 px-6 py-3 text-sm font-medium text-white transition duration-200 hover:bg-blue-700 sm:text-base"
             >
-              Отправить данные {userFormControl.isLoading ? 'Отправка...' : 'Отправить'}
+              {userFormControl.isLoading ? 'Отправка...' : 'Отправить данные'}
             </button>
+
             <button
               type="button"
               onClick={userFormControl.handleReset}
