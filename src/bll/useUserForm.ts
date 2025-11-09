@@ -1,6 +1,7 @@
-import { type ChangeEvent, type FormEvent, useState, useCallback } from 'react';
+import { type ChangeEvent, type FormEvent, useState, useCallback, useEffect } from 'react';
 import { validateForm, type FormData, type Errors } from '../utils/formValidators';
 import { sendDataToServer } from '../dal/api';
+import { debugPhotoPreview } from '../utils/debugPhotoPreview';
 
 export type UserFormControls = {
   isLoading: boolean;
@@ -25,12 +26,27 @@ export const useUserForm = (formSubmit: () => void, croppedImage: Blob | null, s
     cardNumber: '',
   });
 
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      croppedImageBlob: !!croppedImage,
+    }));
+
+    if (errors.croppedImageBlob) {
+      setErrors((prev) => ({
+        ...prev,
+        croppedImageBlob: '',
+      }));
+    }
+  }, [croppedImage]);
+
   const [errors, setErrors] = useState<Errors>({
     companyName: '',
     firstName: '',
     lastName: '',
     position: '',
     cardNumber: '',
+    croppedImageBlob: '',
   });
 
   const handleInputChange = useCallback(
@@ -60,14 +76,14 @@ export const useUserForm = (formSubmit: () => void, croppedImage: Blob | null, s
         cardNumber: numbersOnly,
       }));
 
-      if (errors.cardNumber) {
+      if (errors.cardNumber && formData.cardNumber.length >= 5) {
         setErrors((prev) => ({
           ...prev,
           cardNumber: '',
         }));
       }
     },
-    [errors.cardNumber],
+    [errors.cardNumber, formData.cardNumber],
   );
 
   const handleSubmit = useCallback(
@@ -75,11 +91,6 @@ export const useUserForm = (formSubmit: () => void, croppedImage: Blob | null, s
       e.preventDefault();
 
       if (!validateForm(formData, setErrors)) {
-        return;
-      }
-
-      if (!croppedImage) {
-        console.log('Добавьте и отредактируйте фото');
         return;
       }
 
@@ -100,15 +111,11 @@ export const useUserForm = (formSubmit: () => void, croppedImage: Blob | null, s
         if (croppedImage) {
           formDataToSend.append('photo', croppedImage, 'cropped-image.jpg');
 
-          //           if (false) {
-          //             // Если нужно покозать фото в браузере
-          //             // ✅ ВРЕМЕННО: Создаем URL для просмотра фото
-          //             const tempUrl = URL.createObjectURL(croppedImage);
-          //             console.log('📸 Фото для отправки:', tempUrl);
-          //
-          //             // Открываем фото в новой вкладке
-          //             window.open(tempUrl, '_blank');
-          //           }
+          const showDebugPreview = false; // Меняйте этот флаг
+
+          if (showDebugPreview) {
+            debugPhotoPreview(croppedImage);
+          }
         }
 
         // Здесь отправляем данные на сервер
@@ -144,6 +151,7 @@ export const useUserForm = (formSubmit: () => void, croppedImage: Blob | null, s
           lastName: '',
           position: '',
           cardNumber: '',
+          //croppedImageBlob: formData.croppedImageBlob,
         });
 
         formSubmit();
@@ -165,6 +173,7 @@ export const useUserForm = (formSubmit: () => void, croppedImage: Blob | null, s
       lastName: '',
       position: '',
       cardNumber: '',
+      croppedImageBlob: !!croppedImage,
     });
     setErrors({
       companyName: '',
@@ -172,8 +181,9 @@ export const useUserForm = (formSubmit: () => void, croppedImage: Blob | null, s
       lastName: '',
       position: '',
       cardNumber: '',
+      croppedImageBlob: '',
     });
-  }, []);
+  }, [croppedImage]);
 
   return {
     isLoading,

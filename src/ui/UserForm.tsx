@@ -128,6 +128,8 @@ export const UserForm = (props: Props) => {
           </div>
 
           {/* Кнопки */}
+          {userFormControl.errors.croppedImageBlob && <p className="mb-1 text-xs text-red-500">{userFormControl.errors.croppedImageBlob}</p>}
+
           <div className="flex flex-col gap-3 pt-4 sm:flex-row">
             <button
               type="submit"

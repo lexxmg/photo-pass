@@ -5,6 +5,7 @@ export type FormData = {
   lastName: string;
   position: string;
   cardNumber: string;
+  croppedImageBlob?: boolean;
 };
 
 export type Errors = {
@@ -13,6 +14,7 @@ export type Errors = {
   lastName: string;
   position: string;
   cardNumber: string;
+  croppedImageBlob?: string;
 };
 
 export const validateForm = (formData: FormData, setErrors: (value: Errors) => void): boolean => {
@@ -22,7 +24,7 @@ export const validateForm = (formData: FormData, setErrors: (value: Errors) => v
     lastName: '',
     position: '',
     cardNumber: '',
-    croppedImage: '',
+    croppedImageBlob: '',
   };
 
   let isValid = true;
@@ -44,6 +46,11 @@ export const validateForm = (formData: FormData, setErrors: (value: Errors) => v
 
   if (!formData.position.trim()) {
     newErrors.position = 'Название должности обязательно';
+    isValid = false;
+  }
+
+  if (!formData.croppedImageBlob) {
+    newErrors.croppedImageBlob = 'Добавьте и отредактируйте фото, либо завершите редактирование';
     isValid = false;
   }
 
