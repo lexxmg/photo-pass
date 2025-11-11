@@ -113,6 +113,7 @@ export const UserForm = (props: Props) => {
             </label>
             <input
               type="text"
+              inputMode="numeric"
               id="cardNumber"
               name="cardNumber"
               value={userFormControl.formData.cardNumber}
