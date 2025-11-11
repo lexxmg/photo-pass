@@ -1,4 +1,4 @@
-const URL: string = 'http://192.168.0.110:8080';
+const URL: string = 'http://192.168.0.107:8080';
 
 export type Result = {
   message: string;

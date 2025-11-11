@@ -1,5 +1,8 @@
 import Cropper from 'react-easy-crop';
 import { type ImageCropperControl } from '../bll/useImageCropper';
+import { useViewportWidth } from '../bll/useViewportWidth';
+import { ImageUploadButton } from './ButtonsImageCropper/ImageUploadButton';
+import { MobImageUploadButton } from './ButtonsImageCropper/MobImageUploadButton';
 
 const TARGET_WIDTH = 478;
 const TARGET_HEIGHT = 638;
@@ -11,12 +14,21 @@ type Props = {
 
 export const ImageCropper = (props: Props) => {
   const imageCropperControl = props.imageCropperControl;
+  const { isMinWidth } = useViewportWidth();
 
   const handelClickgetImage = () => {
     imageCropperControl.setIsLoading(true);
     setTimeout(() => {
       imageCropperControl.setIsLoading(false);
       imageCropperControl.fileInputRef.current?.click();
+    }, 20);
+  };
+
+  const handelClickgetCamera = () => {
+    imageCropperControl.setIsLoading(true);
+    setTimeout(() => {
+      imageCropperControl.setIsLoading(false);
+      imageCropperControl.fileCameraRef.current?.click();
     }, 20);
   };
 
@@ -29,7 +41,7 @@ export const ImageCropper = (props: Props) => {
   };
 
   return (
-    <div className="min-w-lg bg-gray-50 px-4 py-8 max-lg:m-auto max-md:min-w-full">
+    <div className="min-w-lg bg-gray-50 px-4 pt-8 max-lg:m-auto max-md:min-w-full max-md:p-0">
       <div className="mx-auto max-w-2xl rounded-lg bg-white p-6 shadow-md">
         {!imageCropperControl.croppedImage && <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">Редактор фотографий</h2>}
 
@@ -42,31 +54,29 @@ export const ImageCropper = (props: Props) => {
           className="hidden"
         />
 
+        {!isMinWidth && (
+          <input
+            type="file"
+            accept="image/*"
+            capture="user"
+            onChange={imageCropperControl.onFileChange}
+            key={imageCropperControl.fileCameraKey}
+            ref={imageCropperControl.fileCameraRef}
+            className="hidden"
+          />
+        )}
+
         {!imageCropperControl.imageSrc && (
           <div className="py-12 text-center">
-            <button
-              type="button"
-              onClick={handelClickgetImage}
-              disabled={imageCropperControl.isLoading}
-              className="cursor-pointer rounded-lg bg-blue-600 px-8 py-3 text-lg font-medium text-white transition duration-200 hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-400 disabled:hover:bg-blue-400"
-            >
-              {imageCropperControl.isLoading ? (
-                <span className="flex items-center justify-center">
-                  {/* Индикатор загрузки */}
-                  <svg className="mr-3 -ml-1 h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Подождите...
-                </span>
-              ) : (
-                '📷 Выберите фотографию'
-              )}
-            </button>
+            {isMinWidth && <ImageUploadButton handelClick={handelClickgetImage} isLoading={imageCropperControl.isLoading} />}
+
+            {!isMinWidth && (
+              <MobImageUploadButton
+                handelClickCamera={handelClickgetCamera}
+                handelClick={handelClickgetImage}
+                isLoading={imageCropperControl.isLoading}
+              />
+            )}
 
             <p className="mt-4 text-gray-600">
               Размер после обрезки: {TARGET_WIDTH}×{TARGET_HEIGHT}px
@@ -77,7 +87,7 @@ export const ImageCropper = (props: Props) => {
         {imageCropperControl.imageSrc && !imageCropperControl.croppedImage && (
           <div className="space-y-6">
             <div className="rounded-lg bg-gray-100 p-4">
-              <div className="relative h-100 overflow-hidden rounded-lg bg-gray-200 max-[25rem]:h-62.5">
+              <div className="relative h-110 overflow-hidden rounded-lg bg-gray-200 max-[25rem]:h-62.5">
                 <Cropper
                   image={imageCropperControl.imageSrc}
                   crop={imageCropperControl.crop}
@@ -112,13 +122,23 @@ export const ImageCropper = (props: Props) => {
               >
                 Применить обрезку
               </button>
-              <button
-                onClick={handelNewImage}
-                disabled={imageCropperControl.isLoading}
-                className="grow rounded-lg bg-gray-500 px-8 py-3 font-medium text-white transition duration-200 hover:bg-gray-600 max-sm:w-full"
-              >
-                {imageCropperControl.isLoading ? 'Подождите...' : 'Новое фото'}
-              </button>
+
+              {isMinWidth ? (
+                <button
+                  onClick={handelNewImage}
+                  disabled={imageCropperControl.isLoading}
+                  className="grow rounded-lg bg-gray-500 px-8 py-3 font-medium text-white transition duration-200 hover:bg-gray-600 max-sm:w-full"
+                >
+                  {imageCropperControl.isLoading ? 'Подождите...' : 'Новое фото'}
+                </button>
+              ) : (
+                <button
+                  onClick={imageCropperControl.imageReset}
+                  className="grow rounded-lg bg-gray-500 px-8 py-3 font-medium text-white transition duration-200 hover:bg-gray-600 max-sm:w-full"
+                >
+                  Загрузить другое фото
+                </button>
+              )}
 
               {props.isAdmin && (
                 <button

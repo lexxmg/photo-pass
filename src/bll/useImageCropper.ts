@@ -10,7 +10,9 @@ export type ImageCropperControl = {
   croppedImage: string | null;
   croppedImageBlob: Blob | null;
   fileInputKey: number;
+  fileCameraKey: number;
   fileInputRef: RefObject<HTMLInputElement | null>;
+  fileCameraRef: RefObject<HTMLInputElement | null>;
   onFileChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onCropComplete: (_croppedArea: Area, croppedAreaPixels: Area) => void;
   showCroppedImage: () => Promise<void>;
@@ -32,7 +34,9 @@ export function useImageCropper(targetWidth: number, targetHeight: number): Imag
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
   const [croppedImageBlob, setCroppedImageBlob] = useState<Blob | null>(null);
   const [fileInputKey, setFileInputKey] = useState<number>(0);
+  const [fileCameraKey, setFileCameraKey] = useState<number>(10);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileCameraRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const onFileChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -103,6 +107,7 @@ export function useImageCropper(targetWidth: number, targetHeight: number): Imag
     setCrop({ x: 0, y: 0 });
     setZoom(1);
     setFileInputKey((prev) => prev + 1); // Пересоздает input
+    setFileCameraKey((prev) => prev + 1);
   }, []);
 
   const backToEdit = useCallback(() => {
@@ -118,7 +123,9 @@ export function useImageCropper(targetWidth: number, targetHeight: number): Imag
     croppedImage,
     croppedImageBlob,
     fileInputKey,
+    fileCameraKey,
     fileInputRef,
+    fileCameraRef,
     isLoading,
     setIsLoading,
     onFileChange,
