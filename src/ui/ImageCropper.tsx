@@ -41,8 +41,8 @@ export const ImageCropper = (props: Props) => {
   };
 
   return (
-    <div className="min-w-lg bg-gray-50 px-4 pt-8 max-lg:m-auto max-md:min-w-full max-md:p-0">
-      <div className="mx-auto max-w-2xl rounded-lg bg-white p-6 shadow-md">
+    <div className="min-w-lg px-4 pt-8 max-lg:m-auto max-md:min-w-full max-md:p-0">
+      <div className="mx-auto max-w-2xl rounded-lg bg-white p-6 shadow-sm sm:shadow-md">
         {!imageCropperControl.croppedImage && <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">Редактор фотографий</h2>}
 
         <input
