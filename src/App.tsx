@@ -2,6 +2,7 @@ import { ImageCropper } from './ui/ImageCropper';
 import { UserForm } from './ui/UserForm';
 import { useImageCropper } from './bll/useImageCropper';
 import { useUserForm } from './bll/useUserForm';
+import { AuthForms } from './ui/AuthForms';
 //import testPhoto from './assets/test_image.jpg';
 
 const TARGET_WIDTH = 478;
@@ -24,6 +25,7 @@ export function App() {
           <UserForm userFormControl={userFormControl} />
         </div>
       </div>
+      <AuthForms />
     </div>
   );
 }
